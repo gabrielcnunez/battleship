@@ -1,6 +1,7 @@
 require 'rspec'
 require './lib/board'
 require './lib/ship'
+require './lib/cell'
 
 RSpec.describe do
   describe '#initialize' do
