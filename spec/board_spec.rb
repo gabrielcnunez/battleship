@@ -71,4 +71,55 @@ RSpec.describe do
       expect(board.valid_placement?(cruiser, ["B1", "C1", "D1"])).to eq(true)
     end
   end
+
+  describe "#place_ships" do
+    it 'can place a ship on the board' do
+      board = Board.new
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+      expect(cell_1).to eq(board.cells["A1"])
+      expect(cell_2).to eq(board.cells["A2"])
+      expect(cell_3).to eq(board.cells["A3"])
+    end
+    it 'can read same ship on different cells' do
+      board = Board.new
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+      expect(cell_1.ship).to eq(cruiser)
+      expect(cell_2.ship).to eq(cruiser)
+      expect(cell_3.ship).to eq(cruiser)
+    end
+  
+  describe "overlapping_ships" do
+    it 'can tell if ship placement will overlap' do
+      board = Board.new
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+      submarine = Ship.new("Submarine", 2)
+      expect(board.valid_placement?(submarine, ["A1", "B1"])).to eq(false)
+    end
+  end
+
+  describe "board_render" do
+    it 'can render a computer board' do
+      board = Board.new
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+      expect(board.render).to eq("  1 2 3 4 \n" + 
+                                 "A . . . . \n" + 
+                                 "B . . . . \n" + 
+                                 "C . . . . \n" + 
+                                 "D . . . . \n")
+    end
+    it 'can render a player board' do
+      board = Board.new
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+      expect(board.render(true)).to eq("  1 2 3 4 \n" + 
+                                       "A S S S . \n" + 
+                                       "B . . . . \n" + 
+                                       "C . . . . \n" + 
+                                       "D . . . . \n")
+    end
+  end
 end
