@@ -1,7 +1,7 @@
 require 'pry'
 
 class Board
-  attr_reader :cells
+  attr_reader :cells, :ships
   def initialize
   @cells = {
       "A1" => Cell.new("A1"),
@@ -21,6 +21,7 @@ class Board
       "D3" => Cell.new("D3"),
       "D4" => Cell.new("D4")
   }
+  @ships = []
   end
 
   def valid_coordinate?(coordinate)
@@ -58,6 +59,7 @@ class Board
   end
 
   def place(ship, placement)
+    @ships << ship
     placement.each do |coordinate|
       @cells[coordinate].place_ship(ship)
     end
