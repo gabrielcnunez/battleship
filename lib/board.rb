@@ -28,11 +28,9 @@ class Board
     end
 
     # def consecutive_letters
-
     # end
 
     # def consecutive_numbers(numbers)
-
     # end
 
     def valid_placement?(ship, coordinates)
@@ -54,4 +52,14 @@ class Board
             false   
         end
     end
+
+  def place(ship, placement)
+    placement.each do |coordinate|
+      @cells[coordinate].place_ship(ship)
+    end
+  end
+
+  def render(show = false)
+  
+  end
 end
