@@ -73,27 +73,23 @@ RSpec.describe do
   end
 
   describe "#place_ships" do
-    it 'an place a ship on the board' do
+    it 'can place a ship on the board' do
       board = Board.new
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
-      cell_1 = board.cells["A1"]
-      cell_2 = board.cells["A2"]
-      cell_3 = board.cells["A3"]
-      expect(cell_1.ship).to eq(cruiser)
-      expect(cell_2.ship).to eq(cruiser)
-      expect(cell_3.ship).to eq(cruiser)
+      expect(cell_1).to eq(board.cells["A1"])
+      expect(cell_2).to eq(board.cells["A2"])
+      expect(cell_3).to eq(board.cells["A3"])
     end
     it 'can read same ship on different cells' do
       board = Board.new
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
-      cell_1 = board.cells["A1"]
-      cell_2 = board.cells["A2"]
-      cell_3 = board.cells["A3"]
-      expect(cell_3.ship).to eq(cell_2.ship)
+      expect(cell_1.ship).to eq(cruiser)
+      expect(cell_2.ship).to eq(cruiser)
+      expect(cell_3.ship).to eq(cruiser)
     end
-  end
+  
   describe "overlapping_ships" do
     it 'can tell if ship placement will overlap' do
       board = Board.new
@@ -109,21 +105,20 @@ RSpec.describe do
       board = Board.new
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
-      require "pry"; binding.pry
-      expect(board.render).to eq("  1 2 3 4 \n" +
-                                 "A . . . . \n" +
-                                 "B . . . . \n" +
-                                 "C . . . . \n" +
+      expect(board.render).to eq("  1 2 3 4 \n" + 
+                                 "A . . . . \n" + 
+                                 "B . . . . \n" + 
+                                 "C . . . . \n" + 
                                  "D . . . . \n")
     end
-    xit 'can render a player board' do
+    it 'can render a player board' do
       board = Board.new
       cruiser = Ship.new("Cruiser", 3)
       board.place(cruiser, ["A1", "A2", "A3"])
-      expect(board.render(true)).to eq("  1 2 3 4 \n" +
-                                       "A S S S . \n" +
-                                       "B . . . . \n" +
-                                       "C . . . . \n" +
+      expect(board.render(true)).to eq("  1 2 3 4 \n" + 
+                                       "A S S S . \n" + 
+                                       "B . . . . \n" + 
+                                       "C . . . . \n" + 
                                        "D . . . . \n")
     end
   end
