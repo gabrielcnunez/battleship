@@ -64,10 +64,6 @@ class Board
   end
 
   def render(show = false)
-    puts "  1 2 3 4"
-    @cells.map do |coordinate, cell|
-      
-
-    end
+  
   end
 end
