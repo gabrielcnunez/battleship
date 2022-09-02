@@ -63,7 +63,32 @@ class Board
     end
   end
 
-  def render(show = false)
+  def render_cells(show = false)
+    if show == false
+      @cells.values.map do |cell|
+        cell.render
+      end
+    else
+      @cells.values.map do |cell|
+        cell.render(true)
+      end
+    end
+  end
 
+  # def print_render_line(rendered_cells)
+  #   4.times do
+  #     print " "
+  #   end
+  #
+  # end
+
+  def render(show = false)
+    rendered_cells = self.render_cells(show)
+    # puts "A #{rendered_cells[0..3].each{|cell| print "#{cell}"}}"
+    return "  1 2 3 4 \n" +
+         "A #{rendered_cells[0..3].join(' ')} \n" +
+         "B #{rendered_cells[4..7].join(' ')} \n" +
+         "C #{rendered_cells[8..11].join(' ')} \n" +
+         "D #{rendered_cells[12..15].join(' ')} \n"
   end
 end
