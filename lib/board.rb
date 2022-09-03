@@ -37,18 +37,37 @@ class Board
   def valid_placement?(ship, coordinates)
     if ship.length != coordinates.length
       return false
+    elsif coordinates.any? {|coordinate| self.valid_coordinate?(coordinate) == false}
+      return false
     elsif coordinates.any? {|coordinate| @cells[coordinate].ship != nil}
       return false
     end
 
+    self.adjacent_to?(coordinates)
+
+    # letter = []
+    # number = []
+    #
+    # coordinates.each do |coordinate|
+    #   letter << coordinate[0].ord
+    #   number << coordinate[1].to_i
+    # end
+    # if number.uniq.size == 1 && letter.each_cons(2).all? {|a, b| b == a + 1 }
+    #     true
+    # elsif letter.uniq.size == 1 && number.each_cons(2).all? {|a, b| b == a + 1 }
+    #     true
+    # else
+    #     false
+    # end
+  end
+
+  def adjacent_to?(coordinates)
     letter = []
     number = []
-
-    coordinates.each do |coordinate|
+    coordinates.sort.each do |coordinate|
       letter << coordinate[0].ord
       number << coordinate[1].to_i
     end
-
     if number.uniq.size == 1 && letter.each_cons(2).all? {|a, b| b == a + 1 }
         true
     elsif letter.uniq.size == 1 && number.each_cons(2).all? {|a, b| b == a + 1 }

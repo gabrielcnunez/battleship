@@ -16,8 +16,8 @@ RSpec.describe Game do
   describe "#print_start_message" do
     it 'displays start message' do
       game = Game.new
-      expect(game.print_start_message).to eq("Welcome to BATTLESHIP\n" +
-                                            "Enter p to play. Enter q to quit.")
+      expect { game.print_start_message }.to output("Welcome to BATTLESHIP\n" +
+                                                    "Enter p to play. Enter q to quit.\n").to_stdout
     end
   end
   describe "#place_computer_ships" do
@@ -25,14 +25,16 @@ RSpec.describe Game do
       # computer needs to pick a random coordinate,
       game = Game.new
       cruiser = Ship.new("Cruiser", 3)
-      game.place_computer_ships([cruiser])
+      game.place_computer_ships(cruiser)
+      require "pry"; binding.pry
       expect(game.computer_board.ships.include?(cruiser)).to eq(true)
     end
   end
   describe "#random_coordinate" do
     it 'can select a random coordinate' do
       game = Game.new
-      expect(game.random_coordinate(game.computer_board)).to be_an_instance_of(Cell)
+      random_coord = game.random_coordinate(game.computer_board)
+      expect(game.player_board.cells[random_coord]).to be_an_instance_of(Cell)
     end
   end
 end
