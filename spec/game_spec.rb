@@ -22,17 +22,10 @@ RSpec.describe Game do
   end
   describe "#place_computer_ships" do
     it 'can place a computer ship' do
-      # computer needs to pick a random coordinate,
       game = Game.new
       cruiser = Ship.new("Cruiser", 3)
-      game.place_computer_ships([cruiser])
+      game.place_computer_ships(cruiser)
       expect(game.computer_board.ships.include?(cruiser)).to eq(true)
-    end
-  end
-  describe "#random_coordinate" do
-    it 'can select a random coordinate' do
-      game = Game.new
-      expect(game.random_coordinate(game.computer_board)).to be_an_instance_of(Cell)
     end
   end
 end

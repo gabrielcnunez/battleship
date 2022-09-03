@@ -1,3 +1,5 @@
+require 'pry'
+
 class Game
   attr_reader :computer_board, :player_board
   def initialize
@@ -22,16 +24,15 @@ class Game
     return "Welcome to BATTLESHIP\n" + "Enter p to play. Enter q to quit."
   end
 
-  def random_coordinate(board)
-    board.cells.keys.sample
+  def computer_ship_coordinates(ship)
+    comp_coordinates = @computer_board.cells.keys.sample(ship.length)
+    until @computer_board.valid_placement?(ship, comp_coordinates) == true
+      comp_coordinates = @computer_board.cells.keys.sample(ship.length)
+    end
+    comp_coordinates
   end
 
-  def place_computer_ships(ships)
-    coordinates = []
-    ships.each do |ship|
-      until @computer_board.valid_placement?(ship.name, coordinates) == true
-        coordinates = @computer_board.cells.keys.sample(ship.length)
-      end
-    end
+  def place_computer_ships(ship)
+    @computer_board.place(ship, computer_ship_coordinates(ship))
   end
 end
