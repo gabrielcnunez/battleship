@@ -61,4 +61,6 @@ class Game
  def place_computer_ships(ship)
    @computer_board.place(ship, computer_ship_coordinates(ship))
  end
+
+
 end
