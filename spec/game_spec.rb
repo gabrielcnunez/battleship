@@ -4,7 +4,6 @@ require './lib/ship'
 require './lib/cell'
 require './lib/player'
 require './lib/game'
-require 'pry'
 
 RSpec.describe Game do
   describe "#initialize" do
@@ -35,6 +34,59 @@ RSpec.describe Game do
       game = Game.new
       random_coord = game.random_coordinate(game.computer_board)
       expect(game.player_board.cells[random_coord]).to be_an_instance_of(Cell)
+    end
+  end
+  describe "#place_player_ships" do
+    it 'can prompt player for ship placement' do
+      game = Game.new
+      expect {game.place_player_ships}.to output("I have laid out my ships on the grid.\n" +
+                                                 "You now need to lay out your two ships.\n"
+                                                 "The Cruiser is three units long and the Submarine is two units long.\n" +
+                                                 "  1 2 3 4 \n" +
+                                                 "A . . . . \n" +
+                                                 "B . . . . \n" +
+                                                 "C . . . . \n" +
+                                                 "D . . . . \n" +
+                                                 "Enter the squares for the Cruiser (3 spaces):\n")
+    end
+  end
+  describe "#display_boards" do
+    it 'can display boards' do
+      game = Game.new
+      expect {game.display_boards}.to output("=============COMPUTER BOARD=============" +
+                                             "  1 2 3 4 \n" +
+                                             "A . . . . \n" +
+                                             "B . . . . \n" +
+                                             "C . . . . \n" +
+                                             "D . . . . \n" +
+                                             "==============PLAYER BOARD==============" +
+                                             "  1 2 3 4 \n" +
+                                             "A . . . . \n" +
+                                             "B . . . . \n" +
+                                             "C . . . . \n" +
+                                             "D . . . . \n")
+    end
+  end
+  describe "#player_shot" do
+    it 'asks for player shot coordinate' do
+      game = Game.new
+      expect {game.player_shot}.to output("Enter the coordinate for your shot:\n")
+    end
+  end
+  describe "#computer_shot" do
+
+  end
+  describe "#display_results" do
+
+  end
+  describe "#game_over?" do
+    it 'can tell when game is not over' do
+      game = Game.new
+      cruiser = Ship.new("Cruiser", 3)
+      cruiser_2 = Ship.new("Cruiser", 3)
+      game.place_computer_ships(cruiser)
+      game.player_board.place(cruiser_2, ["A1", "A2", "A3"])
+      expect(game.game_over?).to eq(false)
     end
   end
 end
