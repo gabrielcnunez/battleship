@@ -62,15 +62,15 @@ class Game
    @computer_board.place(ship, computer_ship_coordinates(ship))
   end
 
-  def computer_fire
-    computer_shot = @player_board.cells.keys.sample
+  def computer_shot
+    computer_fire = @player_board.cells.keys.sample
  
-    until @player_board.cells[computer_shot].fired_upon? == false
-      computer_shot = @player_board.cells.keys.sample
+    until @player_board.cells[computer_fire].fired_upon? == false
+      computer_fire = @player_board.cells.keys.sample
     end
-    @player_board.cells[computer_shot].fire_upon
+    @player_board.cells[computer_fire].fire_upon
     # binding.pry
-    computer_shot
+    computer_fire
   end
   
   def display_game_boards
