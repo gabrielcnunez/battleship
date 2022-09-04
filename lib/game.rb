@@ -56,11 +56,29 @@ class Game
      comp_coordinates = @computer_board.cells.keys.sample(ship.length)
    end
    comp_coordinates
- end
+  end
 
- def place_computer_ships(ship)
+  def place_computer_ships(ship)
    @computer_board.place(ship, computer_ship_coordinates(ship))
- end
+  end
 
+  def computer_fire
+    computer_shot = @player_board.cells.keys.sample
+ 
+    until @player_board.cells[computer_shot].fired_upon? == false
+      computer_shot = @player_board.cells.keys.sample
+    end
+    @player_board.cells[computer_shot].fire_upon
+    # binding.pry
+    computer_shot
+  end
+  
+  def display_game_boards
+    puts "=============COMPUTER BOARD============= \n"
+    puts @computer_board.render
+    puts "==============PLAYER BOARD============== \n"
+    puts @player_board.render(true)
+    puts "======================================== \n"
+  end
 
 end
