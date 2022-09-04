@@ -22,6 +22,19 @@ class Game
     end
   end
 
+  def run_game
+    # until self.game_over?
+    # end
+    cruiser = Ship.new("Cruiser", 3)
+    self.place_computer_ships(cruiser)
+    submarine = Ship.new("Submarine", 2)
+    self.place_computer_ships(submarine)
+    self.place_player_ships
+    require "pry"; binding.pry
+    self.player_shot
+    require "pry"; binding.pry
+  end
+
   def print_start_message
     puts "Welcome to BATTLESHIP\n" + "Enter p to play. Enter q to quit."
   end
@@ -29,6 +42,7 @@ class Game
   def random_coordinate(board)
     board.cells.keys.sample
   end
+
 
   # def random_adjacent_coords(start_coord, length)
   #   up = [start_coord]
@@ -45,22 +59,48 @@ class Game
   #   end
   # end
 
-  # def place_computer_ships(ship)
-  #   coordinates = []
-  #
-  # end
-
   def computer_ship_coordinates(ship)
-   comp_coordinates = @computer_board.cells.keys.sample(ship.length)
-   until @computer_board.valid_placement?(ship, comp_coordinates) == true
-     comp_coordinates = @computer_board.cells.keys.sample(ship.length)
-   end
-   comp_coordinates
- end
+    comp_coordinates = @computer_board.cells.keys.sample(ship.length)
+    until @computer_board.valid_placement?(ship, comp_coordinates) == true
+      comp_coordinates = @computer_board.cells.keys.sample(ship.length)
+    end
+    comp_coordinates
+  end
 
- def place_computer_ships(ship)
-   @computer_board.place(ship, computer_ship_coordinates(ship))
- end
+  def place_computer_ships(ship)
+    @computer_board.place(ship, computer_ship_coordinates(ship))
+  end
+
+  def place_player_ships
+    puts "I have laid out my ships on the grid.\n" +
+         "You now need to lay out your two ships.\n"+
+         "The Cruiser is three units long and the Submarine is two units long.\n" +
+         @player_board.render +
+         "Enter the squares for the Cruiser (3 spaces):\n"
+    cruiser = Ship.new("Cruiser", 3)
+    cruiser_placed = false
+    while cruiser_placed == false
+      cruiser_input = gets.chomp.split(",").map(&:strip)
+      if @player_board.valid_placement?(cruiser, cruiser_input)
+        @player_board.place(cruiser, cruiser_input)
+        cruiser_placed = true
+      else
+        puts "Those are invalid coordinates. Please try again:"
+      end
+    end
+    puts "Enter the squares for the Submarine (2 spaces):"
+    submarine = Ship.new("Submarine", 2)
+    sub_placed = false
+    until sub_placed == true
+      sub_input = gets.chomp.split(",").map(&:strip)
+      if @player_board.valid_placement?(submarine, sub_input)
+        @player_board.place(submarine, sub_input)
+        sub_placed = true
+      else
+        puts "Those are invalid coordinates. Please try again:"
+      end
+    end
+  end
 
 
 end
