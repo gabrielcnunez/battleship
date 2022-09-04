@@ -44,21 +44,6 @@ class Board
     end
 
     self.adjacent_to?(coordinates)
-
-    # letter = []
-    # number = []
-    #
-    # coordinates.each do |coordinate|
-    #   letter << coordinate[0].ord
-    #   number << coordinate[1].to_i
-    # end
-    # if number.uniq.size == 1 && letter.each_cons(2).all? {|a, b| b == a + 1 }
-    #     true
-    # elsif letter.uniq.size == 1 && number.each_cons(2).all? {|a, b| b == a + 1 }
-    #     true
-    # else
-    #     false
-    # end
   end
 
   def adjacent_to?(coordinates)
