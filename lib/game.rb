@@ -102,5 +102,45 @@ class Game
     end
   end
 
+  def player_shot
+    puts "Enter the coordinate for your shot:"
+    valid_shot = false
+    until valid_shot == true
+      shot_input = gets.chomp
+      if @computer_board.valid_coordinate?(shot_input) && @computer_board.cells[shot_input].fired_upon? == false
+        @computer_board.cells[shot_input].fire_upon
+        valid_shot = true
+        self.display_results(shot_input, @computer_board)
+      elsif @computer_board.valid_coordinate?(shot_input) && @computer_board.cells[shot_input].fired_upon?
+        puts "Coordinate has already been fired upon, enter another coordinate:"
+      else
+        puts "Please enter a valid coordinate:"
+      end
+    end
+  end
 
+  def display_results(shot, board)
+    if board == @computer_board
+      if @computer_board.cells[shot].empty?
+        result = "was a miss."
+      elsif @computer_board.cells[shot].ship.sunk?
+        result = "sunk a ship!"
+      else
+        result = "was a hit."
+      end
+      puts "Your shot on #{shot} #{result}"
+
+    elsif board == @player_board
+      if @player_board.cells[shot].empty?
+        result = "was a miss."
+      elsif @player_board.cells[shot].ship.sunk?
+        result = "sunk a ship!"
+      else
+        result = "was a hit."
+      end
+      puts "My shot on #{shot} #{result}"
+    end
+  end
+
+  
 end
