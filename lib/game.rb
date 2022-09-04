@@ -142,5 +142,24 @@ class Game
     end
   end
 
-  
+  def game_over?
+    self.display_game_over_message
+    self.computer_lost? || self.player_lost?
+  end
+
+  def computer_lost?
+    @computer_board.ships.all? {|ship| ship.sunk?}
+  end
+
+  def player_lost?
+    @player_board.ships.all? {|ship| ship.sunk?}
+  end
+
+  def display_game_over_message
+    if self.computer_lost?
+      puts "You won!"
+    elsif self.player_lost?
+      puts "I won!"
+    end
+  end
 end
