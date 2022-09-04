@@ -65,16 +65,36 @@ class Game
   # end
 
   def computer_ship_coordinates(ship)
-    comp_coordinates = @computer_board.cells.keys.sample(ship.length)
-    until @computer_board.valid_placement?(ship, comp_coordinates) == true
-      comp_coordinates = @computer_board.cells.keys.sample(ship.length)
-    end
-    comp_coordinates
+   comp_coordinates = @computer_board.cells.keys.sample(ship.length)
+   until @computer_board.valid_placement?(ship, comp_coordinates) == true
+     comp_coordinates = @computer_board.cells.keys.sample(ship.length)
+   end
+   comp_coordinates
   end
 
   def place_computer_ships(ship)
-    @computer_board.place(ship, computer_ship_coordinates(ship))
+   @computer_board.place(ship, computer_ship_coordinates(ship))
   end
+
+  def computer_shot
+    computer_fire = @player_board.cells.keys.sample
+ 
+    until @player_board.cells[computer_fire].fired_upon? == false
+      computer_fire = @player_board.cells.keys.sample
+    end
+    @player_board.cells[computer_fire].fire_upon
+    # binding.pry
+    computer_fire
+  end
+  
+  def display_game_boards
+    puts "=============COMPUTER BOARD============= \n"
+    puts @computer_board.render
+    puts "==============PLAYER BOARD============== \n"
+    puts @player_board.render(true)
+    puts "======================================== \n"
+  end
+   
 
   def place_player_ships
     puts "I have laid out my ships on the grid.\n" +

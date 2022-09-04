@@ -25,6 +25,7 @@ RSpec.describe Game do
       game = Game.new
       cruiser = Ship.new("Cruiser", 3)
       game.place_computer_ships(cruiser)
+      # require "pry"; binding.pry
       expect(game.computer_board.ships.include?(cruiser)).to eq(true)
     end
   end
@@ -39,7 +40,7 @@ RSpec.describe Game do
     xit 'can prompt player for ship placement' do
       game = Game.new
       expect {game.place_player_ships}.to output("I have laid out my ships on the grid.\n" +
-                                                 "You now need to lay out your two ships.\n"+
+                                                 "You now need to lay out your two ships.\n" +
                                                  "The Cruiser is three units long and the Submarine is two units long.\n" +
                                                  "  1 2 3 4 \n" +
                                                  "A . . . . \n" +
@@ -52,18 +53,21 @@ RSpec.describe Game do
   describe "#display_boards" do
     xit 'can display boards' do
       game = Game.new
-      expect {game.display_boards}.to output("=============COMPUTER BOARD=============" +
+      game.display_game_boards
+      # binding.pry
+      expect {game.display_game_boards}.to output("=============COMPUTER BOARD============= \n" +
                                              "  1 2 3 4 \n" +
                                              "A . . . . \n" +
                                              "B . . . . \n" +
                                              "C . . . . \n" +
                                              "D . . . . \n" +
-                                             "==============PLAYER BOARD==============" +
+                                             "==============PLAYER BOARD============== \n" +
                                              "  1 2 3 4 \n" +
                                              "A . . . . \n" +
                                              "B . . . . \n" +
                                              "C . . . . \n" +
-                                             "D . . . . \n")
+                                             "D . . . . \n" +
+                                             "======================================== \n").to_stdout
     end
   end
   describe "#player_shot" do
@@ -73,7 +77,11 @@ RSpec.describe Game do
     end
   end
   describe "#computer_shot" do
-
+    it 'can fire on a random coordinate' do
+      game = Game.new
+      shot_coordinate = game.computer_fire
+      expect(game.player_board.cells[shot_coordinate].fired_upon?).to eq(true)
+    end
   end
   describe "#display_results" do
 
