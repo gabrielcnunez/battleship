@@ -5,14 +5,15 @@ require './lib/cell'
 class Game
   attr_reader :computer_board, :player_board
   def initialize
-    @computer_board = Board.new
-    @player_board = Board.new
+    # @computer_board = Board.new
+    # @player_board = Board.new
   end
 
   def start
     self.print_start_message
     user_input = gets.chomp
     if user_input == "p"
+      self.setup_game
       self.run_game
     elsif user_input == "q"
       puts "Exiting Program..."
@@ -22,22 +23,34 @@ class Game
     end
   end
 
-  def run_game
+  def setup_game
+    @computer_board = Board.new
+    @player_board = Board.new
     cruiser = Ship.new("Cruiser", 3)
     self.place_computer_ships(cruiser)
     submarine = Ship.new("Submarine", 2)
     self.place_computer_ships(submarine)
     self.place_player_ships
+  end
 
-    # until self.game_over?
-    # #   self.display_boards
-    # #   self.computer_shot
-    #   self.player_shot
-    # end
-
-    require "pry"; binding.pry
-    self.player_shot
-    require "pry"; binding.pry
+  def run_game
+    play_again = nil
+    until play_again == false
+      until self.game_over?
+        self.display_game_boards
+        self.player_shot
+        self.computer_shot
+      end
+      puts "Play again? (Y/N)"
+      restart_input = gets.chomp
+      if restart_input.downcase == "y"
+        play_again = true
+        self.setup_game
+      elsif restart_input.downcase == "n"
+        puts "Exiting Program..."
+        play_again = false
+      end
+    end
   end
 
   def print_start_message
@@ -73,20 +86,20 @@ class Game
   end
 
   def place_computer_ships(ship)
-   @computer_board.place(ship, computer_ship_coordinates(ship))
+    @computer_board.place(ship, computer_ship_coordinates(ship))
   end
 
   def computer_shot
     computer_fire = @player_board.cells.keys.sample
- 
+
     until @player_board.cells[computer_fire].fired_upon? == false
       computer_fire = @player_board.cells.keys.sample
     end
     @player_board.cells[computer_fire].fire_upon
-    # binding.pry
+    self.display_results(computer_fire, @player_board)
     computer_fire
   end
-  
+
   def display_game_boards
     puts "=============COMPUTER BOARD============= \n"
     puts @computer_board.render
@@ -94,7 +107,7 @@ class Game
     puts @player_board.render(true)
     puts "======================================== \n"
   end
-   
+
 
   def place_player_ships
     puts "I have laid out my ships on the grid.\n" +
@@ -113,7 +126,9 @@ class Game
         puts "Those are invalid coordinates. Please try again:"
       end
     end
-    #render player board
+
+    puts @player_board.render(true)
+
     puts "Enter the squares for the Submarine (2 spaces):"
     submarine = Ship.new("Submarine", 2)
     sub_placed = false
