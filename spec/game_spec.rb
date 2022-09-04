@@ -25,7 +25,6 @@ RSpec.describe Game do
       game = Game.new
       cruiser = Ship.new("Cruiser", 3)
       game.place_computer_ships(cruiser)
-      require "pry"; binding.pry
       expect(game.computer_board.ships.include?(cruiser)).to eq(true)
     end
   end
@@ -93,8 +92,7 @@ RSpec.describe Game do
       cruiser = Ship.new("Cruiser", 3)
       cruiser_2 = Ship.new("Cruiser", 3)
       game.place_computer_ships(cruiser)
-      # game.player_board.place(cruiser_2, ["A1", "A2", "A3"])
-      game.player_board.place(cruiser, ["A1", "A2", "A3"])
+      game.player_board.place(cruiser_2, ["A1", "A2", "A3"])
       cruiser.hit
       cruiser.hit
       cruiser.hit

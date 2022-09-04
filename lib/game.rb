@@ -23,13 +23,18 @@ class Game
   end
 
   def run_game
-    # until self.game_over?
-    # end
     cruiser = Ship.new("Cruiser", 3)
     self.place_computer_ships(cruiser)
     submarine = Ship.new("Submarine", 2)
     self.place_computer_ships(submarine)
     self.place_player_ships
+
+    # until self.game_over?
+    # #   self.display_boards
+    # #   self.computer_shot
+    #   self.player_shot
+    # end
+
     require "pry"; binding.pry
     self.player_shot
     require "pry"; binding.pry
@@ -88,6 +93,7 @@ class Game
         puts "Those are invalid coordinates. Please try again:"
       end
     end
+    #render player board
     puts "Enter the squares for the Submarine (2 spaces):"
     submarine = Ship.new("Submarine", 2)
     sub_placed = false
