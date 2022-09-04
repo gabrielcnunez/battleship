@@ -47,11 +47,11 @@ RSpec.describe Game do
                                                  "B . . . . \n" +
                                                  "C . . . . \n" +
                                                  "D . . . . \n" +
-                                                 "Enter the squares for the Cruiser (3 spaces):\n")
+                                                 "Enter the squares for the Cruiser (3 spaces):\n").to_stdout
     end
   end
   describe "#display_boards" do
-    it 'can display boards' do
+    xit 'can display boards' do
       game = Game.new
       game.display_game_boards
       # binding.pry
@@ -94,6 +94,17 @@ RSpec.describe Game do
       game.place_computer_ships(cruiser)
       game.player_board.place(cruiser_2, ["A1", "A2", "A3"])
       expect(game.game_over?).to eq(false)
+    end
+    it 'can tell when game is over' do
+      game = Game.new
+      cruiser = Ship.new("Cruiser", 3)
+      cruiser_2 = Ship.new("Cruiser", 3)
+      game.place_computer_ships(cruiser)
+      game.player_board.place(cruiser_2, ["A1", "A2", "A3"])
+      cruiser.hit
+      cruiser.hit
+      cruiser.hit
+      require "pry"; binding.pry
     end
   end
 end
