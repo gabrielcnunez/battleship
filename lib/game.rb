@@ -5,8 +5,8 @@ require './lib/cell'
 class Game
   attr_reader :computer_board, :player_board
   def initialize
-    # @computer_board = Board.new
-    # @player_board = Board.new
+    @computer_board = Board.new
+    @player_board = Board.new
   end
 
   def start
@@ -247,4 +247,46 @@ class Game
       puts "I won!"
     end
   end
+  # B2 is starting coordinate, up should be A2, down should be C2, left should be
+  # B1, right should be B3
+
+  def find_adjacent_coords(start_coord)
+    adjacent_coordinates = [
+      (start_coord[0].ord - 1).chr + start_coord[1], 
+      (start_coord[0].ord + 1).chr + start_coord[1],
+      start_coord[0] + (start_coord[1].ord - 1).chr,
+      start_coord[0] + (start_coord[1].ord + 1).chr
+    ]
+    adjacent_coordinates.delete_if do |adjacent_coordinate|
+      @player_board.valid_coordinate?(adjacent_coordinate) == false
+    end
+    # require 'pry'; binding.pry
+    adjacent_coordinates  
+  end
+
+  def unsunk_ships
+    board_hits = @player_board.cells.keys.find_all do |key|
+      cell = @player_board.cells[key]
+      cell.fired_upon? && cell.ship != nil && cell.ship.sunk? == false
+    end
+    board_hits.sample
+  end
+
+  def intelligent_shot
+    if unsunk_ships == []
+      computer_shot
+    end
+    
+    potential_targets = find_adjacent_coords(unsunk_ships)
+    educated_guess = potential_targets.sample
+    until @player_board.cells[educated_guess].fired_upon? == false
+      educated_guess = potential_targets.sample
+    end
+    @player_board.cells[educated_guess].fire_upon
+    self.display_results(educated_guess, @player_board)
+    educated_guess
+  end
+
 end
+
+
