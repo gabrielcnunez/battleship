@@ -2,7 +2,6 @@ require 'rspec'
 require './lib/board'
 require './lib/ship'
 require './lib/cell'
-require './lib/player'
 require './lib/game'
 
 RSpec.describe Game do
