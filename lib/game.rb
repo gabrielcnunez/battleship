@@ -26,6 +26,7 @@ class Game
   def setup_game
     @computer_board = Board.new
     @player_board = Board.new
+    self.options_menu
     cruiser = Ship.new("Cruiser", 3)
     self.place_computer_ships(cruiser)
     submarine = Ship.new("Submarine", 2)
@@ -33,20 +34,61 @@ class Game
     self.place_player_ships
   end
 
+  def options_menu
+    puts "Would you like to customize board size? (Y/N)"
+    option = gets.chomp
+    if option.downcase == "y"
+      rows = self.get_board_rows
+      columns = self.get_board_columns
+      @player_board.customize_board_size(columns, rows)
+      @computer_board.customize_board_size(columns, rows)
+    elsif option.downcase != "n"
+      puts "Invalid entry, please try again"
+      self.options_menu
+    end
+  end
+
+  def get_board_rows
+    puts "Enter number of board rows (between 4 - 10):"
+    rows = gets.chomp.to_i
+    if rows < 4 || rows > 10
+      puts "Invalid entry, number of rows can be between 4 and 10"
+      rows = self.get_board_rows
+    end
+    rows
+  end
+
+  def get_board_columns
+    entry_valid = false
+    #which validation method is better between this and get_board_rows
+    until entry_valid == true
+      puts "Enter number of board columns (between 4 - 10):"
+      columns = gets.chomp.to_i
+      if columns < 4 || columns > 10
+        puts "Invalid entry, number of columns can be between 4 and 10"
+      else
+        entry_valid = true
+      end
+    end
+    columns
+  end
+
   def run_game
     play_again = nil
+
     until play_again == false
       until self.game_over?
         self.display_game_boards
         self.player_shot
         self.computer_shot
       end
+
       puts "Play again? (Y/N)"
       restart_input = gets.chomp
       if restart_input.downcase == "y"
         play_again = true
         self.setup_game
-      elsif restart_input.downcase == "n"
+      else
         puts "Exiting Program..."
         play_again = false
       end
@@ -198,8 +240,10 @@ class Game
 
   def display_game_over_message
     if self.computer_lost?
+      self.display_game_boards
       puts "You won!"
     elsif self.player_lost?
+      self.display_game_boards
       puts "I won!"
     end
   end
