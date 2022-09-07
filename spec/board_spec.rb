@@ -19,6 +19,17 @@ RSpec.describe do
     end
   end
 
+  describe '#customize_board_size' do
+    it "can customize board size" do
+      board = Board.new
+      board.customize_board_size(5, 5)
+      expect(board.cells.length).to eq(25)
+      board.cells.values.each do |cell|
+        expect(cell).to be_an_instance_of(Cell)
+      end
+    end
+  end
+
   describe '#valid_coordinate?' do
     it "can tell if a coordinate is on the board" do
       board = Board.new
@@ -48,7 +59,7 @@ RSpec.describe do
       expect(board.valid_placement?(cruiser, ["A1", "A2", "A4"])).to eq(false)
       expect(board.valid_placement?(submarine, ["A1", "C1"])).to eq(false)
     end
-    # #Decided to allow for descending coordinates as long as they are consecutive
+    # #Decided to allow for descending coordinates (or any order, really)
     # it "can determine if ship coordinates are descending" do
     #   board = Board.new
     #   cruiser = Ship.new("Cruiser", 3)
@@ -124,6 +135,31 @@ RSpec.describe do
                                        "B . . . . \n" +
                                        "C . . . . \n" +
                                        "D . . . . \n")
+    end
+    it 'can render a custom player board' do
+      board = Board.new
+      board.customize_board_size(5, 5)
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+      expect(board.render(true)).to eq("  1 2 3 4 5 \n" +
+                                       "A S S S . . \n" +
+                                       "B . . . . . \n" +
+                                       "C . . . . . \n" +
+                                       "D . . . . . \n" +
+                                       "E . . . . . \n")
+    end
+    it 'can render a custom computer board' do
+      board = Board.new
+      board.customize_board_size(5, 6)
+      cruiser = Ship.new("Cruiser", 3)
+      board.place(cruiser, ["A1", "A2", "A3"])
+      expect(board.render).to eq("  1 2 3 4 5 \n" +
+                                 "A . . . . . \n" +
+                                 "B . . . . . \n" +
+                                 "C . . . . . \n" +
+                                 "D . . . . . \n" +
+                                 "E . . . . . \n" +
+                                 "F . . . . . \n")
     end
   end
 end
