@@ -19,6 +19,14 @@ RSpec.describe Game do
                                                     "Enter p to play. Enter q to quit.\n").to_stdout
     end
   end
+  describe "#computer_ship_coordinates" do
+    it 'can select a random set of coordinates to place a ship' do
+      game = Game.new
+      cruiser = Ship.new("Cruiser", 3)
+      expect(game.computer_ship_coordinates(cruiser).length).to eq(3)
+      expect(game.computer_ship_coordinates(cruiser)[0]).to be_an_instance_of(String)
+    end
+  end
   describe "#place_computer_ships" do
     it 'can place a computer ship' do
       # computer needs to pick a random coordinate,
@@ -36,20 +44,7 @@ RSpec.describe Game do
       expect(game.player_board.cells[random_coord]).to be_an_instance_of(Cell)
     end
   end
-  describe "#place_player_ships" do
-    it 'can prompt player for ship placement' do
-      game = Game.new
-      expect {game.place_player_ships}.to output("I have laid out my ships on the grid.\n" +
-                                                 "You now need to lay out your two ships.\n" +
-                                                 "The Cruiser is three units long and the Submarine is two units long.\n" +
-                                                 "  1 2 3 4 \n" +
-                                                 "A . . . . \n" +
-                                                 "B . . . . \n" +
-                                                 "C . . . . \n" +
-                                                 "D . . . . \n" +
-                                                 "Enter the squares for the Cruiser (3 spaces):\n").to_stdout
-    end
-  end
+
   describe "#display_boards" do
     it 'can display boards' do
       game = Game.new
@@ -70,21 +65,34 @@ RSpec.describe Game do
                                              "======================================== \n").to_stdout
     end
   end
-  describe "#player_shot" do
-    it 'asks for player shot coordinate' do
-      game = Game.new
-      expect {game.player_shot}.to output("Enter the coordinate for your shot:\n").to_stdout
-    end
-  end
   describe "#random_shot" do
     it 'can fire on a random coordinate' do
       game = Game.new
-      shot_coordinate = game.computer_shot
+      shot_coordinate = game.random_shot
       expect(game.player_board.cells[shot_coordinate].fired_upon?).to eq(true)
     end
   end
   describe "#display_results" do
-
+    it 'can display results for a miss' do
+      game = Game.new
+      expect {game.display_results("A1", game.computer_board)}.to output("Your shot on A1 was a miss.\n").to_stdout
+    end
+    it 'can display results for a hit' do
+      game = Game.new
+      cruiser = Ship.new("Cruiser", 3)
+      game.computer_board.place(cruiser, ["A1", "A2", "A3"])
+      game.computer_board.cells["A1"].fire_upon
+      expect {game.display_results("A1", game.computer_board)}.to output("Your shot on A1 was a hit.\n").to_stdout
+    end
+    it 'can display results for a sinking' do
+      game = Game.new
+      cruiser = Ship.new("Cruiser", 3)
+      game.player_board.place(cruiser, ["A1", "A2", "A3"])
+      game.player_board.cells["A1"].fire_upon
+      game.player_board.cells["A2"].fire_upon
+      game.player_board.cells["A3"].fire_upon
+      expect {game.display_results("A3", game.player_board)}.to output("My shot on A3 sunk a ship!\n").to_stdout
+    end
   end
   describe "#game_over?" do
     it 'can tell when game is not over' do
@@ -120,7 +128,7 @@ RSpec.describe Game do
       game.player_board.place(cruiser, ["B1", "B2", "B3"])
       game.player_board.cells["B2"].fire_upon
       game.player_board.cells["C1"].fire_upon
-      expect(game.unsunk_ships).to eq("B2")
+      expect(game.unsunk_ships).to eq(["B2"])
     end
     it 'can fire shot intelligently' do
       game = Game.new
@@ -135,7 +143,12 @@ RSpec.describe Game do
   end
 end
 
-
-# print_start_message method
-# game_over? method (while game_over? == false, loop gameplay?)
-# start method (Welcome to Battleship! Enter p => play, q => quit)
+#Method tests omitted due to requiring player input:
+#start
+#setup_game
+#options_menu
+#get_board_rows
+#get_board_columns
+#run_game
+#place_player_ships
+#player_shot

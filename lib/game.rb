@@ -80,7 +80,7 @@ class Game
       until self.game_over?
         self.display_game_boards
         self.player_shot
-        self.computer_shot
+        self.intelligent_shot
       end
 
       puts "Play again? (Y/N)"
@@ -131,7 +131,7 @@ class Game
     @computer_board.place(ship, computer_ship_coordinates(ship))
   end
 
-  def computer_shot
+  def random_shot
     computer_fire = @player_board.cells.keys.sample
 
     until @player_board.cells[computer_fire].fired_upon? == false
@@ -160,7 +160,7 @@ class Game
     cruiser = Ship.new("Cruiser", 3)
     cruiser_placed = false
     while cruiser_placed == false
-      cruiser_input = gets.chomp.split(",").map(&:strip)
+      cruiser_input = gets.chomp.split(" ").map(&:strip)
       if @player_board.valid_placement?(cruiser, cruiser_input)
         @player_board.place(cruiser, cruiser_input)
         cruiser_placed = true
@@ -175,7 +175,7 @@ class Game
     submarine = Ship.new("Submarine", 2)
     sub_placed = false
     until sub_placed == true
-      sub_input = gets.chomp.split(",").map(&:strip)
+      sub_input = gets.chomp.split(" ").map(&:strip)
       if @player_board.valid_placement?(submarine, sub_input)
         @player_board.place(submarine, sub_input)
         sub_placed = true
@@ -252,7 +252,7 @@ class Game
 
   def find_adjacent_coords(start_coord)
     adjacent_coordinates = [
-      (start_coord[0].ord - 1).chr + start_coord[1], 
+      (start_coord[0].ord - 1).chr + start_coord[1],
       (start_coord[0].ord + 1).chr + start_coord[1],
       start_coord[0] + (start_coord[1].ord - 1).chr,
       start_coord[0] + (start_coord[1].ord + 1).chr
@@ -261,7 +261,7 @@ class Game
       @player_board.valid_coordinate?(adjacent_coordinate) == false
     end
     # require 'pry'; binding.pry
-    adjacent_coordinates  
+    adjacent_coordinates
   end
 
   def unsunk_ships
@@ -269,15 +269,16 @@ class Game
       cell = @player_board.cells[key]
       cell.fired_upon? && cell.ship != nil && cell.ship.sunk? == false
     end
-    board_hits.sample
+    board_hits
   end
 
   def intelligent_shot
     if unsunk_ships == []
-      computer_shot
+      return random_shot
     end
-    
-    potential_targets = find_adjacent_coords(unsunk_ships)
+
+    potential_targets = self.unsunk_ships.map {|coordinate| find_adjacent_coords(coordinate)}
+    potential_targets.flatten!
     educated_guess = potential_targets.sample
     until @player_board.cells[educated_guess].fired_upon? == false
       educated_guess = potential_targets.sample
@@ -288,5 +289,3 @@ class Game
   end
 
 end
-
-
